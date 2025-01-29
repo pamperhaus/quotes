@@ -127,7 +127,7 @@ module.exports = async (req, res) => {
 
     const exportResponse = await axios.post(exportUrl, exportPayload, {
       headers: {
-        'x-api-auth-token': process.env.API_KEY,
+        'x-api-auth-token': 'f4f010-6cea35a0-c6c2-4c84-93ec-501f56edf01d', // process.env.API_KEY,
         'Content-Type': 'application/json; charset=utf-8'
       },
       responseType: 'text' // Specify response type as text
@@ -153,7 +153,7 @@ module.exports = async (req, res) => {
     const excelResponse = await axios.get(downloadUrl, {
       responseType: 'arraybuffer',
       headers: {
-        'x-api-auth-token': process.env.API_KEY
+        'x-api-auth-token': 'f4f010-6cea35a0-c6c2-4c84-93ec-501f56edf01d', //process.env.API_KEY
       }
     });
 
