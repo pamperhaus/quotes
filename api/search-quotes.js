@@ -133,6 +133,8 @@ module.exports = async (req, res) => {
       responseType: 'text' // Specify response type as text
     });
 
+    console.log(exportResponse.data)
+
     // Check if the export was successful and filename is returned
     if (exportResponse.status !== 200 || !exportResponse.data) {
       return res.status(500).json({ error: 'Failed to export quotes or invalid export response.' });
