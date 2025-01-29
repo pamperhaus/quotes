@@ -47,7 +47,7 @@ export default async (req, res) => {
       const response = await axios.get('https://requestquote.w3apps.co/api/v1/quotes', {
         params,
         headers: { 'x-api-key': process.env.API_KEY },
-        timeout: 5000, // 5 seconds timeout
+        timeout: 60000, // 5 seconds timeout
       });
 
       const { data, status } = response;
