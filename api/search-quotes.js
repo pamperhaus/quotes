@@ -1,9 +1,9 @@
 // api/search-quotes.js
 
-import axios from 'axios';
-import validator from 'validator';
+const axios = require('axios');
+const validator = require('validator');
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const allowedOrigin = 'https://store.pamperhaus.net';
 
   // Set CORS headers
@@ -11,25 +11,11 @@ export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle preflight (OPTIONS) requests
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
-    return;
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Use POST method.' });
 
   const { email } = req.body;
-
-  // Validate email
-  if (!email || !validator.isEmail(email)) {
-    res.status(400).json({ error: 'Invalid or missing email format.' });
-    return;
-  }
+  if (!email || !validator.isEmail(email)) return res.status(400).json({ error: 'Invalid email.' });
 
   const pageSize = 100;    // Number of records per request
   const maxPages = 50;     // Maximum number of pages to prevent infinite loops
