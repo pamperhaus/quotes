@@ -133,30 +133,32 @@ module.exports = async (req, res) => {
       responseType: 'text' // Specify response type as text
     });
 
-    console.log(exportResponse.data)
-
     // Check if the export was successful and filename is returned
     if (exportResponse.status !== 200 || !exportResponse.data) {
       return res.status(500).json({ error: 'Failed to export quotes or invalid export response.' });
     }
 
-    const excelFilename = exportResponse.data.trim(); // Extract filename from plain text
+    let excelFilename;
+    try {
+      excelFilename = JSON.parse(exportResponse.data.trim());
+    } catch (parseError) {
+      console.error('Error parsing export response:', parseError.message);
+      return res.status(500).json({ error: 'Invalid filename format received from export API.' });
+    }
 
     // Validate the filename format (basic check)
-    if (!excelFilename.endsWith('.xlsx')) {
+    if (typeof excelFilename !== 'string' || !excelFilename.endsWith('.xlsx')) {
       return res.status(500).json({ error: 'Invalid filename format received from export API.' });
     }
 
     // Step 2: Download the Excel File
     // **Note:** Adjust the download URL based on your API's actual file download endpoint.
     // The following is an assumed pattern. Replace it with the correct one if different.
-    const downloadUrl = `https://requestquote.w3apps.co/v3/quotes/export/download/${excelFilename}`;
+    const downloadUrl = `https://s3.amazonaws.com/quick-quote-export/${excelFilename}`;
+    console.log(downloadUrl)
     
     const excelResponse = await axios.get(downloadUrl, {
-      responseType: 'arraybuffer',
-      headers: {
-        'x-api-auth-token': 'f4f010-6cea35a0-c6c2-4c84-93ec-501f56edf01d', //process.env.API_KEY
-      }
+      responseType: 'arraybuffer'
     });
 
     if (excelResponse.status !== 200) {
