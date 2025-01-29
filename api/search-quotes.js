@@ -1,9 +1,4 @@
-// search-quotes.js
-
-export const config = {
-  runtime: 'nodejs',
-  maxDuration: 60, // Maximum execution time in seconds
-};
+// api/search-quotes.js
 
 import axios from 'axios';
 import validator from 'validator';
@@ -36,11 +31,11 @@ export default async (req, res) => {
     return;
   }
 
-  const pageSize = 100;
-  const maxPages = 50;
-  let nextPage = null;
-  let pageCount = 0;
-  const results = [];
+  const pageSize = 100;    // Number of records per request
+  const maxPages = 50;     // Maximum number of pages to prevent infinite loops
+  let nextPage = null;     // Identifier for the next page
+  let pageCount = 0;       // Counter for the number of pages fetched
+  const results = [];      // Array to accumulate matching quotes
 
   try {
     do {
@@ -63,17 +58,19 @@ export default async (req, res) => {
       }
 
       // Filter quotes by email (case-insensitive)
-      results.push(
-        ...data.data.filter(
-          (q) => q.email && q.email.toLowerCase() === email.toLowerCase()
-        )
+      const filteredQuotes = data.data.filter(q => 
+        q.email && q.email.toLowerCase() === email.toLowerCase()
       );
+
+      // Accumulate matching quotes
+      results.push(...filteredQuotes);
 
       // Update nextPage for the next iteration
       nextPage = data.next_page;
       pageCount++;
     } while (nextPage && pageCount < maxPages);
 
+    // Respond with the accumulated results
     res.status(200).json({ Data: results });
   } catch (error) {
     console.error('Error fetching quotes:', error.message);
