@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
 
       const response = await axios.get('https://requestquote.w3apps.co/api/v1/quotes', {
         params,
-        headers: { 'x-api-key': process.env.API_KEY },
+        headers: { 'x-api-key': process.env.API_KEY , 'Content-Type': 'application/json; charset=utf-8'},
         timeout: 60000, // 5 seconds timeout
       });
 
