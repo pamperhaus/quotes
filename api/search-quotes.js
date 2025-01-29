@@ -27,11 +27,6 @@ module.exports = async (req, res) => {
 
   const { email } = req.body;
 
-  // Validate email
-  if (!email || typeof email !== 'string' || !validator.isEmail(email)) {
-    return res.status(400).json({ error: 'Invalid or missing email in request body.' });
-  }
-
   try {
     const searchUrl = 'https://requestquote.w3apps.co/v3/quotes/search/1';
     const payload = {
