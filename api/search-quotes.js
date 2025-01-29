@@ -26,6 +26,8 @@ module.exports = async (req, res) => {
   }
 
   const { email } = req.body;
+  
+  if (!email || !validator.isEmail(email)) return res.status(400).json({ error: 'Invalid email.' });
 
   try {
     const searchUrl = 'https://requestquote.w3apps.co/v3/quotes/search/1';
